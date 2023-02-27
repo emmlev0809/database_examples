@@ -1,0 +1,34 @@
+from sqlalchemy import create_engine
+from models import Book, Author, Publisher
+from sqlalchemy.orm import Session
+
+
+publishers = [Publisher(name="Puffin"),
+              Publisher(name="Scholastic"),
+              Publisher(name="Penguin")]
+
+authors = [Author(name="George Orwell"),
+           Author(name="William Golding"),
+           Author(name="Jane Austen"),
+           Author(name="Neil Gaiman"),
+           Author(name="Terry Pratchett")]
+
+books = [Book(title="1984", isbn=9783161484100, num_pages=328, publication_date=1949, publisher_id=1),
+         Book(title="Lord of The Flies", isbn=9783153485291, num_pages=284, publication_date=1954, publisher_id=2),
+         Book(title="Pride and Prejudice", isbn=9783153725481, num_pages=412, publication_date=1813, publisher_id=3),
+         Book(title="Animal Farm", isbn=97831275491243, num_pages=109, publication_date=1945, publisher_id=1),
+         Book(title="Good Omens", isbn=97831215231243, num_pages=245, publication_date=1990, publisher_id=3)
+         ]
+
+book_list = [0,1,2,3,4,4]
+authors_list = [0,0,1,2,3,4]
+
+for i in in authors_list:
+  authors[i].books.append(books[book_list[i]])
+
+
+engine = create_engine('sqlite:///library.sqlite', echo=True)
+
+with Session(engine) as sess:
+    sess.add_all(books)
+    sess.commit()
