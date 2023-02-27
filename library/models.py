@@ -24,12 +24,12 @@ class Book(Base):
     ISBN_number = Column(Integer, unique=True, nullable=False)
     num_pages = Column(Integer, nullable=False)
     publication_date = Column(Integer, nullable=False)
-    publication_id = Column(Integer, unique=True, nullable=False)
+    publication_id = Column(Integer, ForeignKey("publisher.id"), default=None)
 
     author = relationship("Author",
                              secondary=book_author,
-                             order_by='(Author.author_name)',
-                             back_populates="author")
+                             order_by='(Author.name)',
+                             back_populates="books")
 
     # Gives a representation of an Activity (for printing out)
     def __repr__(self):
@@ -43,7 +43,7 @@ class Author(Base):
     author_name = Column(String, nullable=False)
     book = relationship("Book",
                               secondary=book_author,
-                              order_by='Book.book_name',
+                              order_by='Book.title',
                               back_populates="book")
 
     # Gives a representation of a Person (for printing out)
@@ -62,4 +62,4 @@ class Publisher(Base):
 
     # Gives a representation of a Person (for printing out)
     def __repr__(self):
-        return f"<Publisher({self.publisher_name})>"
+        return f"<Publisher({self.name})>"
